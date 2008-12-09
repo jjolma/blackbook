@@ -15,9 +15,10 @@ Hoe.new('blackbook', Blackbook::VERSION) do |p|
   p.author         = 'Contentfree'
   p.email          = 'dave.myron@contentfree.com'
   p.summary        = 'Blackbook handles the nitty-gritty of importing contacts from various service providers and contact lists and exporting them in a useful format.'
-  p.description    = p.paragraphs_of('README.txt', 1).join("\n\n")
-  p.url            = p.paragraphs_of('README.txt', 0).first.split(/\n/)[1..-1]
-  p.changes        = p.paragraphs_of('History.txt', 0..1).join("\n\n")
+  # FIX these were broken with the switch from README.txt to README.markdown  
+  # p.description    = p.paragraphs_of('README.txt', 1).join("\n\n")
+  # p.url            = p.paragraphs_of('README.txt', 0).first.split(/\n/)[1..-1]
+  # p.changes        = p.paragraphs_of('History.txt', 0..1).join("\n\n")
   p.extra_deps    << [ "mechanize", ">= 0.7.0" ]
   p.extra_deps    << [ "fastercsv", ">= 1.2.0" ]
   p.clean_globs << 'coverage'
