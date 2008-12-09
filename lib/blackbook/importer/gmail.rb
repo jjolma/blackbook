@@ -48,6 +48,7 @@ class Blackbook::Importer::Gmail < Blackbook::Importer::PageScraper
     page = agent.get('http://mail.google.com/mail/h/?v=cl&pnl=a')
     contact_rows = page.search("input[@name='c']/../..")
     contact_rows.collect do |row|
+      columns = row/"td"
       email = columns[2].inner_html.gsub( /(\n|&nbsp;)/, '' ) # email
       clean_email = email[/[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,4}/] 
       
