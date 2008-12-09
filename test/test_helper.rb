@@ -49,7 +49,6 @@ end
 plugin_root = "#{ File.dirname(__FILE__) }/.."
 
 require 'rubygems'
-require 'test/spec'
 require 'mocha'
 
 module BlackbookExtensions
