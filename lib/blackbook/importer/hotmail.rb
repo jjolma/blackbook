@@ -79,16 +79,15 @@ class Blackbook::Importer::Hotmail < Blackbook::Importer::PageScraper
     rows = page.search("//div[@class='ContactsPrintPane cPrintContact BorderTop']")
     rows.collect do |row|
       name = row.search("//div[@class='cDisplayName']").first.innerText.strip
-      name = name[0,(name.size-3)] # char 142 is last char of clean text
-
+      
       vals = {}
-      row.search("/table/tr").each do |pair|
+      row.search("//table/tr").each do |pair|
         key = pair.search("/td[@class='TextAlignRight Label']").first.innerText.strip
         val = pair.search("/td[@class='Value']").first.innerText.strip
         vals[key.to_sym] = val
       end
       vals[:name] = name
-      vals[:email] = (vals['Personal e-mail'.to_sym] || vals['Work e-mail'.to_sym]).split(' ').first rescue ''
+      vals[:email] = (vals['Personal e-mail:'.to_sym] || vals['Work e-mail:'.to_sym]).split(' ').first rescue ''
       vals
     end
   end
