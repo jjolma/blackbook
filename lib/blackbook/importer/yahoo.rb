@@ -49,7 +49,7 @@ class Blackbook::Importer::Yahoo < Blackbook::Importer::PageScraper
     contact_rows = FasterCSV.parse(csv.body)
     labels = contact_rows.shift # TODO: Actually use the labels to find the indexes of the data we want
     contact_rows.collect do |row|
-      next if !row[7].blank? && options[:username] =~ /^#{row[7]}/ # Don't collect self
+      next if !row[7].empty? && options[:username] =~ /^#{row[7]}/ # Don't collect self
       {
         :name  => "#{row[0]} #{row[2]}".to_s, 
         :email => (row[4] || "#{row[7]}@yahoo.com") # email is a field in the data, but will be blank for Yahoo users so we create their email address    

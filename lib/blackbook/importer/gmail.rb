@@ -52,7 +52,7 @@ class Blackbook::Importer::Gmail < Blackbook::Importer::PageScraper
       email = columns[2].inner_html.gsub( /(\n|&nbsp;)/, '' ) # email
       clean_email = email[/[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,4}/] 
       
-      unless clean_email.blank?
+      unless clean_email.empty?
         columns = row/"td"
         { 
           :name  => ( columns[1] / "b" ).inner_html, # name

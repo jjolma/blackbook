@@ -33,7 +33,7 @@ END:VCARD
   # exports contacts as Vcards
 
   def export( contacts = [] )
-    return if contacts.blank? 
+    return if contacts.empty? 
     
     contacts.uniq.compact.collect do |contact|
       first_name, last_name = contact[:name].split(' ', 2)

@@ -23,7 +23,7 @@ class Blackbook::Importer::Hotmail < Blackbook::Importer::PageScraper
   def =~(options)
     return false unless options && options[:username]
     domain = username_domain(options[:username].downcase)
-    !domain.blank? && DOMAINS.keys.include?( domain ) ? true : false
+    !domain.empty? && DOMAINS.keys.include?( domain ) ? true : false
   end
    
   ##

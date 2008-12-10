@@ -68,13 +68,9 @@ require 'blackbook/exporter/base'
 Dir.glob(File.join(File.dirname(__FILE__), 'blackbook/importer/*.rb')).each {|f| require f }
 Dir.glob(File.join(File.dirname(__FILE__), 'blackbook/exporter/*.rb')).each {|f| require f }
 
-class String
-  alias :blank? :empty?
-end
 class NilClass
-  alias :blank? :nil?
-end
-class Array
-  alias :blank? :empty?
+  def empty?
+    true
+  end
 end
 
