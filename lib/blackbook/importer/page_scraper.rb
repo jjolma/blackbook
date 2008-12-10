@@ -9,7 +9,7 @@ class WWW::Mechanize
     unless url.is_a? URI
       url = url.to_s.strip
       url = URI.parse(
-              self.class.html_unescape(
+              Util.html_unescape(
                 SyncEnumerator.new(
                   url.split(/%[0-9A-Fa-f]{2}/), url.scan(/%[0-9A-Fa-f]{2}/)
                 ).map { |x,y|
