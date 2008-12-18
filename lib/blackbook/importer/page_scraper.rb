@@ -1,6 +1,8 @@
 require 'rubygems'
-gem 'mechanize', '>= 0.7.0'
-require 'mechanize'
+# jordan: added 'if not defined?' so that rails & 'rake gems' works
+gem 'mechanize', '>= 0.7.0' if not defined? Rails
+# jordan: added 'if not defined?' so that rails & 'rake gems' works
+require 'mechanize' if not defined? Rails
 require 'generator' # for SyncEnumerator
 
 # Patch Mechanize's broken html unescaping Mechanize 0.6.11
@@ -34,7 +36,8 @@ class WWW::Mechanize
 
     return url
   end
-end
+# jordan: added 'if not defined?' so that rails & 'rake gems' works
+end if not defined? Rails
 
 ##
 # A base class for importers that scrape their contacts from web services
@@ -63,6 +66,17 @@ class Blackbook::Importer::PageScraper < Blackbook::Importer::Base
     prepare
     scrape_contacts
   end
+  
+  def fetch_raw_contacts!
+    create_agent
+    prepare
+    raw_contacts
+  end
+  
+  ##
+  # Helps with debugging failed imports
+  
+  def raw_contacts; end # stub
   
   ##
   # Providers will often require you to login or otherwise prepare to actual 

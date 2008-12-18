@@ -1,4 +1,5 @@
-require 'fastercsv'
+# jordan: added 'if not defined?' so that rails & 'rake gems' works
+require 'fastercsv' if not defined? Rails
 
 ##
 # Imports contacts from a CSV file

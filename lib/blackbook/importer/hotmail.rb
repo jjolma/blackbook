@@ -70,12 +70,16 @@ class Blackbook::Importer::Hotmail < Blackbook::Importer::PageScraper
   # raises an end of file error in Net::HTTP via Mechanize.
   # Seems like Hotmail addresses are now hosted on Windows Live.
 
-  def scrape_contacts
+  def raw_contacts
     unless agent.cookies.find{|c| c.name == 'MSPPre' && c.value == options[:username]}
       raise( Blackbook::BadCredentialsError, "Must be authenticated to access contacts." )
     end
 
-    page = agent.get('PrintShell.aspx?type=contact')
+    agent.get('PrintShell.aspx?type=contact')
+  end
+    
+  def scrape_contacts
+    page = raw_contacts
     rows = page.search("//div[@class='ContactsPrintPane cPrintContact BorderTop']")
     rows.collect do |row|
       name = row.search("//div[@class='cDisplayName']").first.innerText.strip

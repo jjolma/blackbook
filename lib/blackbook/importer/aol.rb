@@ -49,8 +49,8 @@ class Blackbook::Importer::Aol < Blackbook::Importer::PageScraper
   # The url to scrape contacts from has to be put together from the Auth cookie
   # and a known uri that hosts their contact service. An array of hashes with
   # :name and :email keys is returned.
-
-  def scrape_contacts
+  
+  def raw_contacts
     unless auth_cookie = agent.cookies.find{|c| c.name =~ /^Auth/}
       raise( Blackbook::BadCredentialsError, "Must be authenticated to access contacts." )
     end
@@ -66,17 +66,20 @@ class Blackbook::Importer::Aol < Blackbook::Importer::PageScraper
     path << 'addresslist-print.aspx'
     uri.path = path.join('/')
     uri.query = "command=all&sort=FirstLastNick&sortDir=Ascending&nameFormat=FirstLastNick&user=#{utoken}"
-    page = agent.get uri.to_s
+    agent.get uri.to_s
+  end
 
+  def scrape_contacts
+    page = raw_contacts
     # Grab all the contacts
-    names = page.body.scan( /<span class="fullName">([^<]+)<\/span>/ ).flatten
-    emails = page.body.scan( /<span>Email 1:<\/span> <span>([^<]+)<\/span>/ ).flatten
-    (0...[names.size,emails.size].max).collect do |i|
-      {
-        :name => names[i],
-        :email => emails[i]
-      }
-    end
+    # get contact block for each person
+    blocks = page.body.scan(/<span class="fullName">.*?sectionContent.*?<\/tr>/m)
+    # pull name & email out of each block
+    blocks.map do |block|
+      name = block.match(/<span class="fullName">([^<]+)<\/span>/)
+      email = block.match(/<span>Email 1:<\/span> <span>([^<]+)<\/span>/)
+      {:name => name && name[1], :email => email && email[1]}
+    end.select{|b| b[:email]} # only keep contacts that have email addresses
   end
   
   Blackbook.register :aol, self

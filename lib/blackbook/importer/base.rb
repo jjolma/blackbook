@@ -28,6 +28,13 @@ module Blackbook::Importer
       self.options = options
       fetch_contacts!
     end
+    
+    # use for debugging, e.g.:
+    # Blackbook.instance.find_importer(:username => 'xxxx').import_raw(:username => 'xxxx', :password => 'xxxx').body
+    def import_raw(options ={})
+      self.options = options
+      fetch_raw_contacts!
+    end
 
     ##
     # Name of the importer service.

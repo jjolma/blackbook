@@ -36,24 +36,30 @@ class Blackbook::Importer::Gmail < Blackbook::Importer::PageScraper
     login
   end
   
-  ##
-  # scrape gmail contacts for this importer
-
-  def scrape_contacts
+  
+  def raw_contacts
     unless agent.cookies.find{|c| c.name == 'GAUSR' && 
                            c.value == "mail:#{options[:username]}"}
       raise( Blackbook::BadCredentialsError, "Must be authenticated to access contacts." )
     end
     
-    page = agent.get('http://mail.google.com/mail/h/?v=cl&pnl=a')
+    agent.get('http://mail.google.com/mail/h/?v=cl&pnl=a')
+  end
+  
+  ##
+  # scrape gmail contacts for this importer
+
+  def scrape_contacts
+    page = raw_contacts
     contact_rows = page.search("input[@name='c']/../..")
+
     contact_rows.collect do |row|
       columns = row/"td"
+
       email = columns[2].inner_html.gsub( /(\n|&nbsp;)/, '' ) # email
       clean_email = email[/[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,4}/] 
-      
-      unless clean_email.empty?
-        columns = row/"td"
+
+      unless clean_email.empty? 
         { 
           :name  => ( columns[1] / "b" ).inner_html, # name
           :email => clean_email

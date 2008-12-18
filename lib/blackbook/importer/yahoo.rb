@@ -1,5 +1,6 @@
 require 'blackbook/importer/page_scraper'
-require 'fastercsv'
+# jordan: added 'if not defined?' so that 'rake gems' works
+require 'fastercsv' if not defined? Rails
 
 ##
 # contacts importer for Yahoo!
@@ -35,14 +36,19 @@ class Blackbook::Importer::Yahoo < Blackbook::Importer::PageScraper
     login
   end
   
-  ##
-  # scrape yahoo contacts
-
-  def scrape_contacts
+  def raw_contacts
     page = agent.get("http://address.yahoo.com/?1=&VPC=import_export")
     if page.body =~ /To access Yahoo! Address Book\.\.\..*Sign in./m
       raise( Blackbook::BadCredentialsError, "Must be authenticated to access contacts." )
     end
+    page
+  end
+  
+  ##
+  # scrape yahoo contacts
+
+  def scrape_contacts
+    page = raw_contacts
     form = page.forms.last
     csv = agent.submit(form, form.buttons[2]) # third button is Yahoo-format CSV
     
